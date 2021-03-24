@@ -1,43 +1,45 @@
-import React, {useState} from 'react';
-
+import React from 'react';
+import { connect } from 'react-redux';
+import {ActionCreator} from '../../store/action';
 import './todo-list-item.css';
 
-const TodoListItem = ({ label, remove }) => {
-  const [isDone, setIsDone] = useState(false);
-  const [isImportant, setIsImportant] = useState(false);
-  
-  const handleItem = () => {
-    setIsDone((prev) => !prev);
-  };
-
-  const handleImportant = () => {
-    setIsImportant((prev) => !prev);
-  };
-
-  const important = isImportant && "important";
-  const done = isDone && "done";
+const TodoListItem = ({ id, label, done, important, handleRemoveTask, changeDoneStatus, changeImportantStatus }) => {
 
   return (
-    <span className={`todo-list-item ${done}`}>
+    <span className={`todo-list-item ${done && 'done'}`}>
       <span
-        className={`todo-list-item-label ${important}`}
-        onClick={handleItem}>
+        className={`todo-list-item-label ${important && 'important'}`}
+        onClick={() => changeDoneStatus(id)}>
         {label}
       </span>
 
       <button type="button"
               className="btn btn-outline-success btn-sm float-right"
-              onClick={handleImportant}>
+              onClick={() => changeImportantStatus(id)}>
         <i className="fa fa-exclamation" />
       </button>
 
       <button type="button"
               className="btn btn-outline-danger btn-sm float-right"
-              onClick={() => remove(label)}>
+              onClick={() => handleRemoveTask(id)}>
         <i className="fa fa-trash-o" />
       </button>
     </span>
   );
 };
 
-export default TodoListItem;
+const mapDispatchToProps = (dispatch) => ({
+  handleRemoveTask(id) {
+    dispatch(ActionCreator.delTask(id))
+  },
+
+  changeDoneStatus(id) {
+    dispatch(ActionCreator.doneTask(id))
+  },
+
+  changeImportantStatus(id) {
+    dispatch(ActionCreator.importantTask(id))
+  }
+});
+
+export default connect(null, mapDispatchToProps)(TodoListItem);

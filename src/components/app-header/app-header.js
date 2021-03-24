@@ -1,7 +1,11 @@
 import React from 'react';
 import './app-header.css';
 
-const AppHeader = ({toDo, done}) => {
+const AppHeader = ({todos}) => {
+
+  const done = todos.filter((item) => item.done).length;
+  const toDo = todos.length - done;
+
   return (
     <div className="app-header d-flex">
       <h1>Todo List</h1>
